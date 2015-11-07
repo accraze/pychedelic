@@ -161,7 +161,10 @@ iter.next = iter.__next__ # Compatibility Python 2
 class read_wav(object):
 
     def __init__(self, filelike, start=0, end=None):
-        self.wfile, self.infos = wav.open_read_mode(filelike)
+        try:
+            self.wfile, self.infos = wav.open_read_mode(filelike)
+        except:
+            raise InvalidFileError('File "%s" is invalid' % filelike)
         self.end = end
         self.seek(start)
         self.frames_read = 0
@@ -268,3 +271,9 @@ def _until_StopIteration():
         yield
     except StopIteration:
         pass
+
+class InvalidFileError(Exception):
+    """
+    Raised when attempting to read a wave file failed.
+    """
+    pass

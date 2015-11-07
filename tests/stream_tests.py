@@ -8,6 +8,7 @@ import scipy.io.wavfile as sp_wavfile
 
 from .__init__ import A440_MONO_16B, A440_STEREO_16B, STEPS_MONO_16B
 from pychedelic import stream
+from pychedelic.stream import InvalidFileError
 from pychedelic import config
 from pychedelic.core import wav as core_wav
 
@@ -495,6 +496,9 @@ class read_wav_Test(unittest.TestCase):
     def tearDown(self):
         config.frame_rate = 44100
         config.block_size = 1024
+
+    def invalid_file_test(self):
+        self.assertRaises(InvalidFileError, stream.read_wav, 'broken')
 
     def blocks_size_test(self):
         config.block_size = 50
